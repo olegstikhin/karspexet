@@ -1,10 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-Kårspexets Finlandsturné
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+    <h2>Boka biljetter</h2>
+    <form class="register_form" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="first_name">Namn</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="Namn">
+        </div>
+        <div class="form-group">
+            <label for="last_name">E-postadress</label>
+            <input type="text" class="form-control" name="email" id="email" placeholder="E-postadress">
+        </div>
+        <div class="form-group">
+            <label for="discount_code">Rabattkod</label>
+            <input type="text" class="form-control" name="discount_code" id="discount_code" placeholder="Rabattkod">
+        </div>
+        <h3>Nachspex</h3>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="nachspex" id="nachspex"> Jag deltar i nachspexet
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="alcoholfree" id="alcoholfree"> Alkoholfri
+            </label>
+        </div>
+        <div class="form-group">
+            <label for="diet">Allergier/specialdiet</label>
+            <input type="text" class="form-control" name="diet" id="diet" placeholder="Allergier/specialdiet">
+        </div>
+        <div class="form-group">
+            <label for="comment">Kommentarer</label>
+            <textarea class="form-control" name="comment" id="comment" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Skicka</button>
+    </form>
+
+
+{% endblock content %}

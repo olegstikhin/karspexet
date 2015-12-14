@@ -9,6 +9,7 @@ class Participant(models.Model):
     diet = models.CharField(max_length=128)
     alcoholfree = models.BooleanField()
     comment = models.TextField()
+    discount_code = models.ForeignKey('DiscountCode', db_column='participants')
 
 
 class DiscountCode(models.Model):
