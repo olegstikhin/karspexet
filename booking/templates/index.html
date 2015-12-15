@@ -11,14 +11,34 @@
             <label for="last_name">E-postadress</label>
             <input type="text" class="form-control" name="email" id="email" placeholder="E-postadress">
         </div>
+
+        <h3>Föreställning</h3>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="spex" id="spex"> Jag deltar i spexet
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="student" id="student" value="normal" checked>
+                Normal (25&nbsp;€)
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="student" id="student" value="student">
+                Studerande (15&nbsp;€)
+            </label>
+        </div>
         <div class="form-group">
             <label for="discount_code">Rabattkod</label>
             <input type="text" class="form-control" name="discount_code" id="discount_code" placeholder="Rabattkod">
         </div>
         <h3>Nachspex</h3>
+
         <div class="checkbox">
             <label>
-                <input type="checkbox" name="nachspex" id="nachspex"> Jag deltar i nachspexet
+                <input type="checkbox" name="nachspex" id="nachspex"> Jag deltar i nachspexet (endast nachspex 18&nbsp;€, annars +15&nbsp;€)
             </label>
         </div>
         <div class="checkbox">
