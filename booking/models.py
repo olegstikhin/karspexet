@@ -5,6 +5,8 @@ from django.db import models
 class Participant(models.Model):
     name = models.CharField(max_length=128)
     email = models.EmailField()
+    spex = models.BooleanField()
+    student = models.BooleanField()
     nachspex = models.BooleanField()
     diet = models.CharField(max_length=128)
     alcoholfree = models.BooleanField()
