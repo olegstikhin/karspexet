@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-    <h2>Boka biljetter</h2>
-    <form class="register_form" method="post">
+<div class="center-block" id="form-background">
+	<div class="clearfix">
+		<h2 class="pull-left">Boka biljetter</h2>
+		<img class="pull-right" src='static/images/logo.png' width="300px" />
+	</div
+	
+	<form class="register_form" method="post">
         {% csrf_token %}
         <div class="form-group">
             <label for="first_name">Namn</label>
@@ -56,6 +61,7 @@
         </div>
         <button type="submit" class="btn btn-primary">Skicka</button>
     </form>
-
+	
+</div>
 
 {% endblock content %}
