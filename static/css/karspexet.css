@@ -11,7 +11,7 @@
 }
 
 body {
-	background-image: url('../../static/images/bakgrund.jpg');
+	background-image: url('../images/bakgrund.jpg');
 	background-size: 100%;
 	background-position: top;
 	font-family: 'AgencyFb', 'Arial';
@@ -27,9 +27,9 @@ h2 {
 
 @font-face {
     font-family: 'ParkLaneNF'; 
-    src: url('../../static/fonts/parkLaneNF.ttf');
+    src: url('../fonts/ParkLaneNF.ttf');
 }
 @font-face {
     font-family: 'AgencyFb'; 
-    src: url('../../static/fonts/AgencyFb.ttf');
+    src: url('../fonts/AgencyFb.ttf');
 }
