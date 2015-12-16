@@ -1,3 +1,35 @@
 .content {
-    margin-top: 70px;
+    margin-top: 50px;
+}
+
+#form-background {
+	background-color:rgba(255,255,255,0.6);
+	padding: 15px;
+	border-radius: 5px;
+	width: 70%;
+	position: center;
+}
+
+body {
+	background-image: url('../../static/images/bakgrund.jpg');
+	background-size: 100%;
+	background-position: top;
+	font-family: 'AgencyFb', 'Arial';
+	font-size: 2em;
+	font-style: bold;
+
+}
+
+h2 {
+	font-size: 40px;
+	margin-top: 5px;
+}
+
+@font-face {
+    font-family: 'ParkLaneNF'; 
+    src: url('../../static/fonts/parkLaneNF.ttf');
+}
+@font-face {
+    font-family: 'AgencyFb'; 
+    src: url('../../static/fonts/AgencyFb.ttf');
 }
