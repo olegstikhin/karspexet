@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="center-block" id="form-background">
 	<div class="clearfix">
 		<h2 class="pull-left">Boka biljetter</h2>
 		<img class="pull-right" src='static/images/logo.png' width="300px" />
 	</div>
 	
-	<form class="register_form" method="post">
+	<form action="/submit/" class="register_form" method="post">
         {% csrf_token %}
         <div class="form-group">
             <label for="first_name">Namn</label>
@@ -39,7 +38,6 @@
             <label for="discount_code">Rabattkod</label>
             <input type="text" class="form-control" name="discount_code" id="discount_code" placeholder="Rabattkod">
         </div>
-        <button type="submit" class="btn btn-primary btn-sm">Kontrollera rabattkoden</button>
         <h2>Nachspex</h2>
 
         <div class="checkbox">
@@ -62,7 +60,4 @@
         </div>
         <button type="submit" class="btn btn-primary">Fortsätt</button>
     </form>
-	
-</div>
-
 {% endblock content %}

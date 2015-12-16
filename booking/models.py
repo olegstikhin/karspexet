@@ -5,12 +5,12 @@ from django.db import models
 class Participant(models.Model):
     name = models.CharField(max_length=128)
     email = models.EmailField()
-    spex = models.BooleanField()
-    student = models.BooleanField()
-    nachspex = models.BooleanField()
+    spex = models.CharField(max_length=128)
+    nachspex = models.CharField(max_length=128)
     diet = models.CharField(max_length=128)
-    alcoholfree = models.BooleanField()
+    alcoholfree = models.CharField(max_length=128)
     comment = models.TextField()
+    discount_code = models.ForeignKey('DiscountCode', db_column='participants', null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

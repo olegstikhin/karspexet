@@ -14,23 +14,28 @@ def confirm(request):
     if request.method == 'POST':
         name = request.POST['name']
         email = request.POST['email']
-        try:
-            validate_email(email)
-        except forms.ValidationError:
-            return HttpResponse("<p>Din e-postadress är inte giltig, vänligen försök på nytt</p><p><a href='./'>Tillbaka</a></p>")
         spex = request.POST.get('spex', False)
+        discount_code = request.POST['discount_code']
+        check = DiscountCode.objects.filter(code=discount_code).count()
         nachspex = request.POST.get('nachspex', False)
         student_str = request.POST.get('student', False)
         student = (student_str != "normal")
-        sum = 0
+        sum = 0.0
+        dc = ""
         if spex:
             spex_answer = "ja"
-            if student:
-                spex_answer += ", studerande (15 €)"
-                sum += 15
+            if check:
+                dc = DiscountCode.objects.get(code=discount_code)
+                discount_price = dc.price
+                sum += discount_price
+                spex_answer += " (med rabattkoden: " + str(int(discount_price)) + " €)"
             else:
-                spex_answer += ", icke-studerande (25 €)"
-                sum += 25
+                if student:
+                    spex_answer += ", studerande (15 €)"
+                    sum += 15
+                else:
+                    spex_answer += ", icke-studerande (25 €)"
+                    sum += 25
         else:
             spex_answer = "nej"
         if nachspex:
@@ -45,7 +50,6 @@ def confirm(request):
             nachspex_answer = "nej"
         if (not spex) and (not nachspex):
             return HttpResponse("<p>Du har inte valt varken föreställningen eller nachspexet.</p><p><a href='./'>Tillbaka</a></p>")
-        discount_code = request.POST['discount_code']
         alcoholfree = request.POST.get('alcoholfree', False)
         if alcoholfree:
             alcoholfree_answer = "ja"
@@ -53,7 +57,30 @@ def confirm(request):
             alcoholfree_answer = "nej"
         diet = request.POST['diet']
         comment = request.POST['comment']
-        #subject, sender, recipient = 'Anmälan till Kårspexets föreställning', 'Kårspexambassaden <karspex@teknolog.fi>', email
-        #content = "Tack för din anmälan till Kårspexets Finlandsföreställning den 20 februari.\nVänligen betala " + str(sum) + " € till konto FI13 1309 3000 0570 75.\n\nMed vänliga hälsningar,\nKårspexambassaden"
-        #send_mail(subject, content, sender, [email], fail_silently=False)
-        return render_to_response("confirm.html", {'name': name, 'email': email, 'spex_answer': spex_answer, 'nachspex_answer': nachspex_answer, 'alcoholfree_answer': alcoholfree_answer, 'diet': diet, 'comment': comment, 'sum': sum, })
+        return render_to_response("confirm.html", {'name': name, 'email': email, 'spex_answer': spex_answer, 'nachspex_answer': nachspex_answer, 'alcoholfree_answer': alcoholfree_answer, 'diet': diet, 'comment': comment, 'sum': sum, 'dc': dc, }, context_instance=RequestContext(request))
+    else:
+        return HttpResponse("<p>Fel</p>")
+
+def send(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        try:
+            validate_email(email)
+        except forms.ValidationError:
+            return HttpResponse("<p>Din e-postadress är inte giltig, vänligen försök på nytt</p><p><a href='./'>Tillbaka</a></p>")
+        spex = request.POST['spex_answer']
+        nachspex = request.POST['nachspex_answer']
+        alcoholfree = request.POST['alcoholfree_answer']
+        diet = request.POST['diet']
+        comment = request.POST['comment']
+        sum = request.POST['sum']
+        dc = DiscountCode.objects.filter(code=request.POST['dc']).first()
+        subject, sender, recipient = 'Anmälan till Kårspexets föreställning', 'Kårspexambassaden <karspex@teknolog.fi>', email
+        content = "Tack för din anmälan till Kårspexets Finlandsföreställning den 20 februari.\nVänligen betala " + str(sum) + " € till konto FI13 1309 3000 0570 75.\n\nMed vänliga hälsningar,\nKårspexambassaden"
+        send_mail(subject, content, sender, [email], fail_silently=False)
+        new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcoholfree, diet=diet, comment=comment, discount_code=dc)
+        new_participant.save()
+        return render(request, "thanks.html")
+    else:
+        return HttpResponse("<p>Fel</p>")
