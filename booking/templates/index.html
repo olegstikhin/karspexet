@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-    <h2>Boka biljetter</h2>
-    <form class="register_form" method="post">
+    <h1>Boka biljetter</h1>
+    <form action="/submit/" class="register_form" method="post">
         {% csrf_token %}
         <div class="form-group">
             <label for="first_name">Namn</label>
@@ -12,7 +12,7 @@
             <input type="text" class="form-control" name="email" id="email" placeholder="E-postadress">
         </div>
 
-        <h3>Föreställning</h3>
+        <h2>Föreställning</h2>
         <div class="checkbox">
             <label>
                 <input type="checkbox" name="spex" id="spex"> Jag deltar i spexet
@@ -34,11 +34,12 @@
             <label for="discount_code">Rabattkod</label>
             <input type="text" class="form-control" name="discount_code" id="discount_code" placeholder="Rabattkod">
         </div>
-        <h3>Nachspex</h3>
+        <button type="submit" class="btn btn-primary btn-sm">Kontrollera rabattkoden</button>
+        <h2>Nachspex</h2>
 
         <div class="checkbox">
             <label>
-                <input type="checkbox" name="nachspex" id="nachspex"> Jag deltar i nachspexet (endast nachspex 18&nbsp;€, annars +15&nbsp;€)
+                <input type="checkbox" name="nachspex" id="nachspex">Jag deltar i nachspexet (endast nachspex 18&nbsp;€, annars +15&nbsp;€)
             </label>
         </div>
         <div class="checkbox">
@@ -54,7 +55,7 @@
             <label for="comment">Kommentarer</label>
             <textarea class="form-control" name="comment" id="comment" rows="3"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Skicka</button>
+        <button type="submit" class="btn btn-primary">Fortsätt</button>
     </form>
 
 

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+    <form action="/send/" method="post">
+        <h1>Bekräfta din information</h1>
+        <ul>
+            <li><strong>Namn:</strong> <span id="name">{{ name }}</span></li>
+            <li><strong>E-post:</strong> <span id="email">{{ email }}</span></li>
+            <li><strong>Deltar i spexet:</strong> <span id="spex">{{ spex_answer }}</span></li>
+            <li><strong>Deltar i nachspexet:</strong> <span id="nachspex">{{ nachspex_answer }}</span></li>
+            <li><strong>Alkoholfri:</strong> <span id="alcoholfree">{{ alcoholfree_answer }}</span></li>
+            <li><strong>Allergier/specialdiet:</strong> <span id="diet">{{ diet }}</span></li>
+            <li><strong>Kommentarer:</strong> <span id="comment">{{ comment }}</span></li>
+            <li><strong>Priset:</strong> {{ sum }}&nbsp;€</li>
+        </ul>
+        <p><button type="submit" class="btn btn-primary">Skicka</button></p>
+    </form>
+{% endblock content %}
