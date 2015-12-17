@@ -14,9 +14,15 @@ def form_page_view(request):
 def confirm(request):
     if request.method == 'POST':
         name = request.POST['name']
+        if name == "":
+            return HttpResponse("<p>Du har inte angett ditt namn!</p><p><a href='/'>Tillbaka</a></p>")
         email = request.POST['email']
+        try:
+            validate_email(email)
+        except forms.ValidationError:
+            return HttpResponse("<p>Din e-postadress är inte giltig, vänligen försök på nytt</p><p><a href='/'>Tillbaka</a></p>")
         spex = request.POST.get('spex', False)
-        discount_code = request.POST['discount_code']
+        discount_code = request.POST.get('discount_code', "")
         check = DiscountCode.objects.filter(code=discount_code).count()
         nachspex = request.POST.get('nachspex', False)
         student_str = request.POST.get('student', False)
@@ -51,14 +57,14 @@ def confirm(request):
         else:
             nachspex_answer = "nej"
         if (not spex) and (not nachspex):
-            return HttpResponse("<p>Du har inte valt varken föreställningen eller nachspexet.</p><p><a href='./'>Tillbaka</a></p>")
+            return HttpResponse("<p>Du har inte valt varken föreställningen eller nachspexet.</p><p><a href='/'>Tillbaka</a></p>")
         if alcoholfree:
             alcoholfree_answer = "ja"
         else:
             alcoholfree_answer = "nej"
-        avec = request.POST['avec']
-        diet = request.POST['diet']
-        comment = request.POST['comment']
+        avec = request.POST.get('avec', "")
+        diet = request.POST.get('diet', "")
+        comment = request.POST.get('comment', "")
         return render_to_response("confirm.html", {'name': name, 'email': email, 'spex_answer': spex_answer, 'nachspex_answer': nachspex_answer, 'alcoholfree_answer': alcoholfree_answer, 'diet': diet, 'avec': avec, 'comment': comment, 'sum': sum, 'dc': dc, }, context_instance=RequestContext(request))
     else:
         return HttpResponse("<p>Fel</p>")
@@ -70,7 +76,7 @@ def send(request):
         try:
             validate_email(email)
         except forms.ValidationError:
-            return HttpResponse("<p>Din e-postadress är inte giltig, vänligen försök på nytt</p><p><a href='./'>Tillbaka</a></p>")
+            return HttpResponse("<p>Din e-postadress är inte giltig, vänligen försök på nytt</p><p><a href='/'>Tillbaka</a></p>")
         spex = request.POST['spex_answer']
         nachspex = request.POST['nachspex_answer']
         alcoholfree = request.POST['alcoholfree_answer']
