@@ -9,6 +9,7 @@ class Participant(models.Model):
     nachspex = models.CharField(max_length=128)
     diet = models.CharField(max_length=128)
     alcoholfree = models.CharField(max_length=128)
+    avec = models.CharField(max_length=256)
     comment = models.TextField()
     discount_code = models.ForeignKey('DiscountCode', db_column='participants', null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)

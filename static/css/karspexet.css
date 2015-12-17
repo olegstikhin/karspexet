@@ -1,9 +1,10 @@
 .content {
     margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 #form-background {
-	background-color:rgba(255,255,255,0.6);
+	background-color:rgba(255,255,255,0.8);
 	padding: 15px;
 	border-radius: 5px;
 	width: 70%;

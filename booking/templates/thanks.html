@@ -1,5 +1,9 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% block content %}
-   <h1>Tack, din registrering har lyckats!</h1>
+   <div class="clearfix">
+       <h2 class="pull-left">Tack, din registrering har lyckats!</h2>
+       <img class="pull-right" src='{% static 'images/logo.png' %}' width="300px" />
+   </div>
    <p>Du har fått ett bekräftelsemeddelande med betalningsinsruktioner till din e-postadress.</p>
 {% endblock content %}

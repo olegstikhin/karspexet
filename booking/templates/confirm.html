@@ -1,8 +1,12 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% block content %}
     <form action="/send/" method="post">
         {% csrf_token %}
-        <h1>Bekräfta din information</h1>
+        <div class="clearfix">
+		    <h2 class="pull-left">Bekräfta din information</h2>
+		    <img class="pull-right" src='{% static 'images/logo.png' %}' width="300px" />
+	    </div>
         <ul>
             <li><strong>Namn:</strong> {{ name }}</li>
             <li><strong>E-post:</strong> {{ email }}</li>

@@ -38,26 +38,27 @@ def confirm(request):
                     sum += 25
         else:
             spex_answer = "nej"
+        alcoholfree = request.POST.get('alcoholfree', False)
         if nachspex:
             nachspex_answer = "ja"
-            if spex:
+            if alcoholfree:
+                nachspex_answer += " (13 €)"
+                sum += 13
+            else:
                 nachspex_answer += " (15 €)"
                 sum += 15
-            else:
-                nachspex_answer += " (18 €)"
-                sum += 18
         else:
             nachspex_answer = "nej"
         if (not spex) and (not nachspex):
             return HttpResponse("<p>Du har inte valt varken föreställningen eller nachspexet.</p><p><a href='./'>Tillbaka</a></p>")
-        alcoholfree = request.POST.get('alcoholfree', False)
         if alcoholfree:
             alcoholfree_answer = "ja"
         else:
             alcoholfree_answer = "nej"
+        avec = request.POST['avec']
         diet = request.POST['diet']
         comment = request.POST['comment']
-        return render_to_response("confirm.html", {'name': name, 'email': email, 'spex_answer': spex_answer, 'nachspex_answer': nachspex_answer, 'alcoholfree_answer': alcoholfree_answer, 'diet': diet, 'comment': comment, 'sum': sum, 'dc': dc, }, context_instance=RequestContext(request))
+        return render_to_response("confirm.html", {'name': name, 'email': email, 'spex_answer': spex_answer, 'nachspex_answer': nachspex_answer, 'alcoholfree_answer': alcoholfree_answer, 'diet': diet, 'avec': avec, 'comment': comment, 'sum': sum, 'dc': dc, }, context_instance=RequestContext(request))
     else:
         return HttpResponse("<p>Fel</p>")
 
@@ -73,13 +74,14 @@ def send(request):
         nachspex = request.POST['nachspex_answer']
         alcoholfree = request.POST['alcoholfree_answer']
         diet = request.POST['diet']
+        avec = request.POST['avec']
         comment = request.POST['comment']
         sum = request.POST['sum']
         dc = DiscountCode.objects.filter(code=request.POST['dc']).first()
         subject, sender, recipient = 'Anmälan till Kårspexets föreställning', 'Kårspexambassaden <karspex@teknolog.fi>', email
         content = "Tack för din anmälan till Kårspexets Finlandsföreställning den 20 februari.\nVänligen betala " + str(sum) + " € till konto FI13 1309 3000 0570 75.\n\nMed vänliga hälsningar,\nKårspexambassaden"
         send_mail(subject, content, sender, [email], fail_silently=False)
-        new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcoholfree, diet=diet, comment=comment, discount_code=dc)
+        new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcoholfree, diet=diet, avec=avec, comment=comment, discount_code=dc)
         new_participant.save()
         return render(request, "thanks.html")
     else:
