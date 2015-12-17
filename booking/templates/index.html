@@ -16,9 +16,11 @@
             $("#nachspex").change(function() {
                 if($("#nachspex").is(':checked')) {
                     $("#alcoholfree").prop("disabled", false);
+                    $("#avec").prop("disabled", false);
                     $("#diet").prop("disabled", false);
                 } else {
                     $("#alcoholfree").prop("disabled", true);
+                    $("#avec").prop("disabled", true);
                     $("#diet").prop("disabled", true);
                 }
             });
@@ -76,6 +78,10 @@
             <label>
                 <input type="checkbox" name="alcoholfree" id="alcoholfree" disabled="true"> Alkoholfri (-2&nbsp;€)
             </label>
+        </div>
+        <div class="form-group">
+            <label for="diet">Avec</label>
+            <input type="text" class="form-control" name="avec" id="avec" disabled="true" placeholder="Avec">
         </div>
         <div class="form-group">
             <label for="diet">Allergier/specialdiet</label>

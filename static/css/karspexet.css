@@ -34,3 +34,8 @@ h2 {
     font-family: 'AgencyFb'; 
     src: url('../fonts/AgencyFb.ttf');
 }
+
+.logo {
+	margin-top: 50px;
+
+}

@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from booking.models import *
+import datetime, math
 
 # Create your views here.
 def form_page_view(request):
@@ -20,7 +21,7 @@ def confirm(request):
         nachspex = request.POST.get('nachspex', False)
         student_str = request.POST.get('student', False)
         student = (student_str != "normal")
-        sum = 0.0
+        sum = 0
         dc = ""
         if spex:
             spex_answer = "ja"
@@ -79,7 +80,7 @@ def send(request):
         sum = request.POST['sum']
         dc = DiscountCode.objects.filter(code=request.POST['dc']).first()
         subject, sender, recipient = 'Anmälan till Kårspexets föreställning', 'Kårspexambassaden <karspex@teknolog.fi>', email
-        content = "Tack för din anmälan till Kårspexets Finlandsföreställning den 20 februari.\nVänligen betala " + str(sum) + " € till konto FI13 1309 3000 0570 75.\n\nMed vänliga hälsningar,\nKårspexambassaden"
+        content = "Tack för din anmälan till Kårspexets Finlandsföreställning den 20 februari.\nVänligen betala " + sum + " € till konto FI45 4055 0012 3320 33 med för- och efternamn som meddelande senast " + (datetime.datetime.now() + datetime.timedelta(days=7)).strftime("%d.%m.%Y") + ".\n\nMed vänliga hälsningar,\nKårspexambassaden"
         send_mail(subject, content, sender, [email], fail_silently=False)
         new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcoholfree, diet=diet, avec=avec, comment=comment, discount_code=dc)
         new_participant.save()

@@ -8,7 +8,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../favicon.ico">
+    <link rel="icon" href="{% static 'images/favicon.ico' %}">
 
     <title>Kårspexet Bonnie & Clyde</title>
 
@@ -50,6 +50,9 @@
         <div class="center-block" id="form-background">
         {% block content %}{% endblock content %}
         </div>
+          <div class="logo">
+            <div align="center"><a href="https://www.teknologforeningen.fi/"><img src="{% static 'images/tf_logo.png' %}" height="75px" alt="Teknologföreningen"/></a></div>
+          </div>
       </div>
     </div><!-- /.container -->
 
