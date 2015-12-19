@@ -33,6 +33,8 @@ def confirm(request):
             spex_answer = "ja"
             if check:
                 dc = DiscountCode.objects.get(code=discount_code)
+                if dc.used:
+                    return HttpResponse("<p>Denna rabattkod har redan använts!</p><p><a href='/'>Tillbaka</a></p>")
                 discount_price = dc.price
                 sum += discount_price
                 spex_answer += " (med rabattkoden: " + str(int(discount_price)) + " €)"
@@ -90,6 +92,9 @@ def send(request):
         send_mail(subject, content, sender, [email], fail_silently=False)
         new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcoholfree, diet=diet, avec=avec, comment=comment, discount_code=dc)
         new_participant.save()
+        if dc is not None:
+            dc.used = True
+            dc.save()
         return render(request, "thanks.html")
     else:
         return HttpResponse("<p>Fel</p>")

@@ -21,6 +21,7 @@ class Participant(models.Model):
 class DiscountCode(models.Model):
     code = models.CharField(max_length=8)
     price = models.FloatField()
+    used = models.BooleanField()
 
     def __str__(self):
         return self.code
