@@ -7,7 +7,6 @@
 	background-color:rgba(255,255,255,0.8);
 	padding: 15px;
 	border-radius: 5px;
-	width: 70%;
 	position: center;
 }
 
@@ -18,7 +17,6 @@ body {
 	font-family: 'AgencyFb', 'Arial';
 	font-size: 2em;
 	font-style: bold;
-
 }
 
 h2 {
@@ -35,7 +33,31 @@ h2 {
     src: url('../fonts/AgencyFb.ttf');
 }
 
-.logo {
-	margin-top: 50px;
+@media (min-width: 1000px) {
+    #form-background {
+        width: 70%;
+    }
 
+    .logo {
+        width: 300px;
+    }
+}
+
+@media (max-width: 999px) {
+    #form-background {
+        width: 90%;
+    }
+
+    .logo {
+        width: 200px;
+    }
+}
+
+@media (max-width: 675px) {
+    .logo {
+        width: 100%;
+    }
+}
+.footer-logo {
+	margin-top: 50px;
 }
