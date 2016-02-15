@@ -58,6 +58,13 @@ h2 {
         width: 100%;
     }
 }
+
 .footer-logo {
 	margin-top: 50px;
+  text-align: center;
+}
+
+.footer-logo img {
+  margin-left: 30px;
+  margin-right: 30px;
 }
