@@ -88,7 +88,7 @@ def send(request):
         sum = request.POST['sum']
         dc = DiscountCode.objects.filter(code=request.POST['dc']).first()
         subject, sender, recipient = 'Anmälan till Kårspexets föreställning', 'Kårspexambassaden <karspex@teknolog.fi>', email
-        content = "Tack för din anmälan till Kårspexets Finlandsföreställning den 20 februari.\nVänligen betala " + sum + " € till konto FI45 4055 0012 3320 33 (mottagare Peter Leander) med för- och efternamn som meddelande senast 19.2.2015.\n\nMed vänliga hälsningar,\nKårspexambassaden"
+        content = "Tack för din anmälan till Kårspexets Finlandsföreställning den 25 februari.\nVänligen betala " + sum + " € till konto FI45 4055 0012 3320 33 (mottagare Peter Leander) med för- och efternamn som meddelande senast 24.2.2015.\n\nMed vänliga hälsningar,\nKårspexambassaden"
         send_mail(subject, content, sender, [email], fail_silently=False)
         new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcoholfree, diet=diet, avec=avec, comment=comment, discount_code=dc)
         new_participant.save()
