@@ -67,7 +67,8 @@ def confirm(request):
         avec = request.POST.get('avec', "")
         diet = request.POST.get('diet', "")
         comment = request.POST.get('comment', "")
-        return render_to_response("confirm.html", {'name': name, 'email': email, 'spex_answer': spex_answer, 'nachspex_answer': nachspex_answer, 'alcoholfree_answer': alcoholfree_answer, 'diet': diet, 'avec': avec, 'comment': comment, 'sum': sum, 'dc': dc, }, context_instance=RequestContext(request))
+        context = {'name': name, 'email': email, 'spex_answer': spex_answer, 'nachspex_answer': nachspex_answer, 'alcoholfree_answer': alcoholfree_answer, 'diet': diet, 'avec': avec, 'comment': comment, 'sum': sum, 'dc': dc, }
+        return render(request, "confirm.html", context)
     else:
         return HttpResponse("<p>Fel</p>")
 
