@@ -23,6 +23,11 @@
   </head>
 
   <body>
+    {% if error_message %}
+    <div class="alert alert-danger text-center">
+      <strong>Varning!</strong> {{error_message}}
+    </div>
+    {% endif %}
 
     <!-- <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">

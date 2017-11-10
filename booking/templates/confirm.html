@@ -1,33 +1,83 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% block content %}
-    <form action="/send/" method="post">
-        {% csrf_token %}
+
         <div class="clearfix">
-		    <h2 class="pull-left">Bekräfta din information</h2>
-		    <img class="pull-right" src='{% static 'images/logo.png' %}' width="300px" />
+		    <h2 class="center-block">Bekräfta din information</h2>
+		    <!--<img class="pull-right" src='{% static 'images/logo.png' %}' width="300px" /> -->
 	    </div>
-        <ul>
-            <li><strong>Namn:</strong> {{ name }}</li>
-            <li><strong>E-post:</strong> {{ email }}</li>
-            <li><strong>Deltar i spexet:</strong> {{ spex_answer }}</li>
-            <li><strong>Deltar i nachspexet:</strong> {{ nachspex_answer }}</li>
-            <li><strong>Alkoholfri:</strong> {{ alcoholfree_answer }}</li>
-            <li><strong>Avec:</strong> {{ avec }}</li>
-            <li><strong>Allergier/specialdiet:</strong> {{ diet }}</li>
-            <li><strong>Kommentarer:</strong> {{ comment }}</li>
-            <li><strong>Priset:</strong> {{ sum }}&nbsp;€{{ discount_info }}</li>
+        <ul class="list-group">
+            <li class="list-group-item">Namn: {{ name }}</li>
+            <li class="list-group-item">E-postaddress: {{email}} </li>
+            <li class="list-group-item">Biljettyp: {{register_choice}} </li>
+            <li class="list-group-item">Prisklass:
+            {% if student %}
+             Studerande
+             {% else %}
+             Inte Studerande
+             {% endif %}
+           </li>
+            <li class="list-group-item">Spex:
+            {% if spex %}
+               Ja
+            {% else %}
+               Nej
+            {% endif %}
+          </li>
+          <li class="list-group-item"> Nachspex:
+            {% if nachspex %}
+               Ja
+               <li class="list-group-item"> Specialdiet:
+                 {% if diet != "" %}
+                  {{diet}}
+                  {% else %}
+                  Ingen specialdiet
+                  {% endif %}
+
+                </li>
+               <li class="list-group-item"> Alkoholfri:
+                  {% if alcohol_free %}
+                    Ja
+                  {% else %}
+                    Nej
+                  {% endif %}
+                </li>
+                  <li class="list-group-item"> Avec:
+                    {% if avec != "" %}
+                      {{avec}}
+                    {% else %}
+                      Ingen avec
+                    {% endif %}
+                  </li>
+            {% else %}
+               Nej
+            {% endif %}
+          </li>
+          <li class="list-group-item"> <strong>Pris: {{final_price}} €</strong>
+
+          {% if coupon_entered %}
+            {% if coupon_valid %}
+            Med rabattkunpongen <i>{{ coupon_code }}</i>
+            {% else %}
+            Tyvärr berättigar inte din kupong <i>{{ coupon_code }}</i> till rabatt. Kontrollera att du fyllt i koden korrekt!
+            {% endif %}
+          {% endif %}
+          </li>
         </ul>
+        <form action="/send/" method="post">
+        {% csrf_token %}
+
         <input type="hidden" name="name" value="{{ name }}">
         <input type="hidden" name="email" value="{{ email }}">
-        <input type="hidden" name="spex_answer" value="{{ spex_answer }}">
-        <input type="hidden" name="nachspex_answer" value="{{ nachspex_answer }}">
-        <input type="hidden" name="alcoholfree_answer" value="{{ alcoholfree_answer }}">
         <input type="hidden" name="avec" value="{{ avec }}">
+        <input type="hidden" name="spex" value="{{ spex }}">
         <input type="hidden" name="diet" value="{{ diet }}">
-        <input type="hidden" name="comment" value="{{ comment }}">
-        <input type="hidden" name="dc" value="{{ dc }}">
-        <input type="hidden" name="sum" value="{{ sum }}">
-        <p><button type="submit" class="btn btn-primary">Skicka</button></p>
+        <input type="hidden" name="student" value="{{ student }}">
+        <input type="hidden" name="nachspex" value="{{ nachspex }}">
+        <input type="hidden" name="coupon" value="{{ coupon_code }}">
+        <input type="hidden" name="alcohol_free" value="{{ alcohol_free }}">
+
+
+        <button type="submit" class="btn btn-primary btn-lg center-block">Boka biljett</button>
     </form>
 {% endblock content %}

@@ -21,6 +21,7 @@ from booking.views import *
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', form_page_view),
-    url(r'^submit/$', confirm),
+    #url(r'^submit/$', confirm),
     url(r'^send/$', send),
+    url(r'^register/$', register),
 ]

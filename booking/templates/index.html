@@ -26,73 +26,19 @@
             });
         });
     </script>
+
 	<div class="clearfix">
 		<h2 class="pull-left">Kårspexets Finlandsturné</h2>
         <div class="pull-right logo">
             <img src='static/images/logo.png' alt="Kårspexet" width="100%" />
         </div>
 	</div>
+
+
     <p>Välkommen på Kårspexet 2017 "Karl XII - eller Knappast Karl För Sin Krona" den 25 februari klockan 15 i Helsingin Suomalainen Yhteiskoulu (Stormyrvägen 8, Helsingfors). Efteråt följer nachspex på Teknologföreningen (Otsvängen 22, Esbo) för de som vill fortsätta kvällen med en sits i gott sällskap. Priset för föreställningen är 15/25&nbsp;€ (studerande/övriga) och för nachspexet 15&nbsp;€ (13&nbsp;€ alkoholfri). För både föreställningen och nachspexet blir priset 30/40&nbsp;€ (studerande/övriga) eller 27/37&nbsp;€ (alkoholfri).</p>
     <p>Ifall ni har en rabattkod, kan ni mata in den i fältet "Rabattkod". Efter att ni klickat på fortsätt beräknar bokningssystemet ert nya pris.</p>
     <p>Vi ses på spexet, kom ihåg skumpan!</p>
-    <h2>Boka biljetter</h2>
-	<form action="/submit/" class="register_form" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="first_name">Namn</label>
-            <input type="text" class="form-control" name="name" id="name" placeholder="Namn">
-        </div>
-        <div class="form-group">
-            <label for="last_name">E-postadress</label>
-            <input type="text" class="form-control" name="email" id="email" placeholder="E-postadress">
-        </div>
 
-        <h2>Föreställning</h2>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="spex" id="spex"> <strong>Jag deltar i spexet</strong>
-            </label>
-        </div>
-        <div class="radio">
-            <label>
-                <input type="radio" name="student" id="student1" value="normal" disabled="true" checked>
-                Normal (25&nbsp;€)
-            </label>
-        </div>
-        <div class="radio">
-            <label>
-                <input type="radio" name="student" id="student2" value="student" disabled="true">
-                Studerande (15&nbsp;€)
-            </label>
-        </div>
-        <div class="form-group">
-            <label for="discount_code">Rabattkod</label>
-            <input type="text" class="form-control" name="discount_code" id="discount_code" disabled="true" placeholder="Rabattkod">
-        </div>
-        <h2>Nachspex</h2>
+    <a href="/register/" class="btn btn-default text-center">Anmälan till spexet</a>
 
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="nachspex" id="nachspex"><strong>Jag deltar i nachspexet</strong> (15&nbsp;€)
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="alcoholfree" id="alcoholfree"> Alkoholfri (-2&nbsp;€)
-            </label>
-        </div>
-        <div class="form-group">
-            <label for="diet">Avec (obs: måste anmälas skilt!)</label>
-            <input type="text" class="form-control" name="avec" id="avec" placeholder="Avec">
-        </div>
-        <div class="form-group">
-            <label for="diet">Allergier/specialdiet</label>
-            <input type="text" class="form-control" name="diet" id="diet" placeholder="Allergier/specialdiet">
-        </div>
-        <div class="form-group">
-            <label for="comment">Kommentarer</label>
-            <textarea class="form-control" name="comment" id="comment" rows="3"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Fortsätt</button>
-    </form>
 {% endblock content %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+
+<script>
+
+function updateForm() {
+  if (($(".register_choice select").val()) == 'only_nachspex')
+  {
+    $(".only_nachspex").removeClass('hidden')
+    $(".only_spex").addClass('hidden')
+  }
+  else if (($(".register_choice select").val()) == 'only_spex')
+  {
+    $(".only_spex").removeClass('hidden')
+    $(".only_nachspex").addClass('hidden')
+  }
+  else
+  {
+    $(".only_spex").removeClass('hidden')
+    $(".only_nachspex").removeClass('hidden')
+  }
+}
+
+    $(document).ready(function() {
+        updateForm()
+        $(".register_choice").change(updateForm)
+      });
+</script>
+
+{% load bootstrap4 %}
+
+<form action="/register/" method="post" class="register_form">
+      {% csrf_token %}
+
+      {% bootstrap_field form.name %}
+      {% bootstrap_field form.email %}
+      {% bootstrap_field form.register_choice field_class='register_choice'%}
+      {% bootstrap_field form.student field_class='student' form_group_class='form-group only_spex' %}
+      {% bootstrap_field form.alcoholFree form_group_class='form-group only_nachspex'%}
+      {% bootstrap_field form.diet form_group_class='form-group only_nachspex'%}
+      {% bootstrap_field form.avec form_group_class='form-group only_nachspex'%}
+      {% bootstrap_field form.coupon form_group_class='form-group only_spex'%}
+
+      {% buttons %}
+    <input type="submit" class="btn btn-primary" value="Fortsätt" />
+    {% endbuttons %}
+</form>
+
+{% endblock content %}

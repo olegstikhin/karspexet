@@ -1,101 +1,129 @@
 from django import forms
 from django.core.mail import send_mail
 from django.core.validators import validate_email
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from booking.models import *
 import datetime, math
 
+from .forms import registerForm
+
+def determine_price(spex, nachspex, student, alcohol_free):
+    price = 0
+    if spex:
+        if student:
+            price += 15
+        else:
+            price += 25
+    if nachspex:
+        price += 15
+    if alcohol_free:
+        price -= 3
+
+    return price
+
 # Create your views here.
 def form_page_view(request):
     return render(request, "index.html")
 
-def confirm(request):
+def register(request):
+# if this is a POST request we need to process the form data
     if request.method == 'POST':
-        name = request.POST['name']
-        if name == "":
-            return HttpResponse("<p>Du har inte angett ditt namn!</p><p><a href='/'>Tillbaka</a></p>")
-        email = request.POST['email']
-        try:
-            validate_email(email)
-        except forms.ValidationError:
-            return HttpResponse("<p>Din e-postadress är inte giltig, vänligen försök på nytt</p><p><a href='/'>Tillbaka</a></p>")
-        spex = request.POST.get('spex', False)
-        discount_code = request.POST.get('discount_code', "")
-        check = DiscountCode.objects.filter(code=discount_code).count()
-        nachspex = request.POST.get('nachspex', False)
-        student_str = request.POST.get('student', False)
-        student = (student_str != "normal")
-        sum = 0
-        dc = ""
-        if spex:
-            spex_answer = "ja"
-            if check:
-                dc = DiscountCode.objects.get(code=discount_code)
-                if dc.used:
-                    return HttpResponse("<p>Denna rabattkod har redan använts!</p><p><a href='/'>Tillbaka</a></p>")
-                discount_price = dc.price
-                sum += discount_price
-                spex_answer += " (med rabattkoden: " + str(int(discount_price)) + " €)"
+        # create a form instance and populate it with data from the request:
+        form = registerForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+
+            form = form.cleaned_data
+            if form['student'] == 'student':
+                student = True
             else:
-                if student:
-                    spex_answer += ", studerande (15 €)"
-                    sum += 15
+                student = False
+
+            if form['register_choice'] == 'only_spex':
+                register_choice = "Endast spex"
+                spex = True
+                nachspex = False
+            elif form['register_choice'] == 'only_nachspex':
+                register_choice = "Endast nachspex"
+                spex = False
+                nachspex = True
+            else:
+                register_choice = "Spex och nachspex"
+                spex = True
+                nachspex = True
+
+            price = determine_price(spex, nachspex, student, form['alcoholFree'])
+
+            final_price = price
+            coupon_code = form['coupon']
+            coupon_valid = False
+            if coupon_code != "":
+                coupon_entered = True
+
+                if DiscountCode.objects.filter(code=coupon_code).exists(): #Check if a code exists
+                    coupon_valid = True
+                    coupon = DiscountCode.objects.get(code=form['coupon'])
+                    final_price = coupon.price
+
                 else:
-                    spex_answer += ", icke-studerande (25 €)"
-                    sum += 25
-        else:
-            spex_answer = "nej"
-        alcoholfree = request.POST.get('alcoholfree', False)
-        if nachspex:
-            nachspex_answer = "ja"
-            if alcoholfree:
-                nachspex_answer += " (13 €)"
-                sum += 13
+                    coupon_valid = False
             else:
-                nachspex_answer += " (15 €)"
-                sum += 15
-        else:
-            nachspex_answer = "nej"
-        if (not spex) and (not nachspex):
-            return HttpResponse("<p>Du har inte valt varken föreställningen eller nachspexet.</p><p><a href='/'>Tillbaka</a></p>")
-        if alcoholfree:
-            alcoholfree_answer = "ja"
-        else:
-            alcoholfree_answer = "nej"
-        avec = request.POST.get('avec', "")
-        diet = request.POST.get('diet', "")
-        comment = request.POST.get('comment', "")
-        context = {'name': name, 'email': email, 'spex_answer': spex_answer, 'nachspex_answer': nachspex_answer, 'alcoholfree_answer': alcoholfree_answer, 'diet': diet, 'avec': avec, 'comment': comment, 'sum': sum, 'dc': dc, }
-        return render(request, "confirm.html", context)
+                coupon_entered = False
+
+            context = {
+                'name': form['name'],
+                'email': form['email'],
+                'avec': form['avec'],
+                'diet': form['diet'],
+                'alcohol_free' : form['alcoholFree'],
+                'register_choice': register_choice,
+                'spex': spex,
+                'student': student,
+                'nachspex': nachspex,
+                'price': price,
+                'coupon_valid': coupon_valid,
+                'final_price': final_price,
+                'coupon_code': coupon_code,
+                'coupon_entered': coupon_entered,
+                }
+            return render(request, 'confirm.html', context)
+
+    # if a GET (or any other method) we'll create a blank form
     else:
-        return HttpResponse("<p>Fel</p>")
+        form = registerForm()
+    return render(request, 'register.html', {'form': form})
 
 def send(request):
     if request.method == 'POST':
         name = request.POST['name']
         email = request.POST['email']
-        try:
-            validate_email(email)
-        except forms.ValidationError:
-            return HttpResponse("<p>Din e-postadress är inte giltig, vänligen försök på nytt</p><p><a href='/'>Tillbaka</a></p>")
-        spex = request.POST['spex_answer']
-        nachspex = request.POST['nachspex_answer']
-        alcoholfree = request.POST['alcoholfree_answer']
-        diet = request.POST['diet']
+        spex = request.POST['spex']
+        nachspex = request.POST['nachspex']
+        coupon = request.POST['coupon']
+        alcohol_free = request.POST['alcohol_free']
         avec = request.POST['avec']
-        comment = request.POST['comment']
-        sum = request.POST['sum']
-        dc = DiscountCode.objects.filter(code=request.POST['dc']).first()
-        subject, sender, recipient = 'Anmälan till Kårspexets föreställning', 'Kårspexambassaden <karspex@teknolog.fi>', email
-        content = "Tack för din anmälan till Kårspexets Finlandsföreställning den 25 februari.\nVänligen betala " + sum + " € till konto FI45 4055 0012 3320 33 (mottagare Peter Leander) med för- och efternamn som meddelande senast 24.2.2017.\n\nMed vänliga hälsningar,\nKårspexambassaden"
-        send_mail(subject, content, sender, [email], fail_silently=False)
-        new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcoholfree, diet=diet, avec=avec, comment=comment, discount_code=dc)
+        diet = request.POST['diet']
+        student = request.POST['student']
+        comment = "none"
+
+        price = determine_price(spex, nachspex, student, alcohol_free)
+
+        coupon = None
+        if DiscountCode.objects.filter(code=coupon).exists():
+            coupon = DiscountCode.objects.get(code=form['coupon'])
+            price = coupon.price #update price if a coupon exists
+            coupon.used = True
+            coupon.save()
+
+
+        new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcohol_free, diet=diet, avec=avec, comment=comment, discount_code=coupon)
         new_participant.save()
-        if dc is not None:
-            dc.used = True
-            dc.save()
+        subject, sender, recipient = 'Anmälan till Kårspexets föreställning', 'Kårspexambassaden <karspex@teknolog.fi>', email
+        content = "Tack för din anmälan till Kårspexets Finlandsföreställning den 10 februari.\nVänligen betala " + str(price) + " € till konto FI45 4055 0012 3320 33 (mottagare Kårspexambassaden) med för- och efternamn som meddelande senast 8.2.2017.\n\nMed vänliga hälsningar,\nKårspexambassaden"
+        send_mail(subject, content, sender, [email], fail_silently=False)
+
         return render(request, "thanks.html")
     else:
-        return HttpResponse("<p>Fel</p>")
+        return render(request, 'index.html', {'error_message': "Det skedde ett fel, vänligen försök pånytt"})
