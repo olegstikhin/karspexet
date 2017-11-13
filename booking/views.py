@@ -59,13 +59,19 @@ def register(request):
             final_price = price
             coupon_code = form['coupon']
             coupon_valid = False
+            coupon_expired = False
             if coupon_code != "":
                 coupon_entered = True
 
                 if DiscountCode.objects.filter(code=coupon_code).exists(): #Check if a code exists
-                    coupon_valid = True
+                    #coupon_valid = True
                     coupon = DiscountCode.objects.get(code=form['coupon'])
-                    final_price = coupon.price
+                    if not coupon.is_used():
+                        coupon_valid = True
+                        final_price = coupon.price
+                    else:
+                        coupon_valid = False
+                        coupon_expired = True
 
                 else:
                     coupon_valid = False
@@ -77,6 +83,7 @@ def register(request):
                 'email': form['email'],
                 'avec': form['avec'],
                 'diet': form['diet'],
+                'comment': form['comment'],
                 'alcohol_free' : form['alcoholFree'],
                 'register_choice': register_choice,
                 'spex': spex,
@@ -85,8 +92,10 @@ def register(request):
                 'price': price,
                 'coupon_valid': coupon_valid,
                 'final_price': final_price,
+                'coupon': coupon,
                 'coupon_code': coupon_code,
                 'coupon_entered': coupon_entered,
+                'coupon_expired': coupon_expired,
                 }
             return render(request, 'confirm.html', context)
 
@@ -97,6 +106,7 @@ def register(request):
 
 def send(request):
     if request.method == 'POST':
+        comment = request.POST['comment']
         name = request.POST['name']
         email = request.POST['email']
         spex = request.POST['spex']
@@ -106,16 +116,15 @@ def send(request):
         avec = request.POST['avec']
         diet = request.POST['diet']
         student = request.POST['student']
-        comment = "none"
 
         price = determine_price(spex, nachspex, student, alcohol_free)
 
-        coupon = None
         if DiscountCode.objects.filter(code=coupon).exists():
-            coupon = DiscountCode.objects.get(code=form['coupon'])
-            price = coupon.price #update price if a coupon exists
-            coupon.used = True
-            coupon.save()
+            coupon = DiscountCode.objects.get(code=coupon)
+            if not coupon.is_used():
+                price = coupon.price #update price if a coupon exists and is not used
+                coupon.times_used += 1
+                coupon.save()
 
 
         new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcohol_free, diet=diet, avec=avec, comment=comment, discount_code=coupon)

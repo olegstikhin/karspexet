@@ -29,3 +29,4 @@ class registerForm(forms.Form):
     diet = forms.CharField(label="Specialdiet", max_length = 500, required = False)
     avec = forms.CharField(label="Avec", max_length = 100, required = False)
     coupon = forms.CharField(label="Rabattkod", max_length=100, required = False)
+    comment = forms.CharField(label="Kommentar eller hälsning", max_length =500, widget=forms.Textarea, required = False)

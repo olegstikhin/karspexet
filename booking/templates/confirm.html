@@ -10,6 +10,7 @@
             <li class="list-group-item">Namn: {{ name }}</li>
             <li class="list-group-item">E-postaddress: {{email}} </li>
             <li class="list-group-item">Biljettyp: {{register_choice}} </li>
+            <li class="list-group-item">Kommentar: {{comment}} </li>
             <li class="list-group-item">Prisklass:
             {% if student %}
              Studerande
@@ -57,9 +58,17 @@
 
           {% if coupon_entered %}
             {% if coupon_valid %}
-            Med rabattkunpongen <i>{{ coupon_code }}</i>
+            <div class="alert alert-success">
+            Med rabattkunpongen <i>{{ coupon_code }}</i>. Kupongen har använts {{ coupon.times_used }}/{{ coupon.uses }} gånger.
+            {% elif coupon_expired %}
+          </div>
+            <div class="alert alert-warning">
+              Kupongen du angett har redan använts. Kontakta ambassaden vid oklara situationer.
+            </div>
             {% else %}
+            <div class="alert alert-warning">
             Tyvärr berättigar inte din kupong <i>{{ coupon_code }}</i> till rabatt. Kontrollera att du fyllt i koden korrekt!
+            </div>
             {% endif %}
           {% endif %}
           </li>
@@ -76,7 +85,7 @@
         <input type="hidden" name="nachspex" value="{{ nachspex }}">
         <input type="hidden" name="coupon" value="{{ coupon_code }}">
         <input type="hidden" name="alcohol_free" value="{{ alcohol_free }}">
-
+        <input type="hidden" name="comment" value="{{ comment }}">
 
         <button type="submit" class="btn btn-primary btn-lg center-block">Boka biljett</button>
     </form>

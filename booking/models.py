@@ -21,7 +21,16 @@ class Participant(models.Model):
 class DiscountCode(models.Model):
     code = models.CharField(max_length=8)
     price = models.FloatField()
-    used = models.BooleanField(default = False)
-    
+    #used = models.BooleanField(default = False)
+    uses = models.IntegerField(default = 1)
+    times_used = models.IntegerField(default = 0)
+
+    def is_used(self):
+        if self.times_used >= self.uses:
+            return True
+        else:
+            return False
+
+
     def __str__(self):
         return self.code
