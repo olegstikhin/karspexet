@@ -25,7 +25,7 @@ class registerForm(forms.Form):
         label = "Studerande",
         required = False,
     )
-    alcoholFree = forms.BooleanField(label ="Aloholfritt Nachspex", required = False)
+    alcoholFree = forms.BooleanField(label ="Alkoholfritt Nachspex", required = False)
     diet = forms.CharField(label="Specialdiet", max_length = 500, required = False)
     avec = forms.CharField(label="Avec", max_length = 100, required = False)
     coupon = forms.CharField(label="Rabattkod", max_length=100, required = False)
