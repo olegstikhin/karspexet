@@ -6,6 +6,7 @@ from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from booking.models import *
 import datetime, math
+import uuid
 
 from .forms import registerForm
 
@@ -23,7 +24,26 @@ def determine_price(spex, nachspex, student, alcohol_free):
 
     return price
 
+
 # Create your views here.
+
+def ticket(request, participant_id):
+    if Participant.objects.filter(uuid = participant_id).exists():
+        participant = Participant.objects.get(uuid = participant_id)
+        return HttpResponse("It Works")
+    else:
+        return HttpResponse("Boo :()")
+
+def coupon(request, coupon_code):
+    if DiscountCode.objects.filter(code = coupon_code).exists():
+        coupon = DiscountCode.objects.get(code = coupon_code)
+        #return discount code information
+        return render(request, 'coupon.html', {'times_used': coupon.times_used, 'uses': coupon.uses, 'price': coupon.price})
+    else:
+        return render(request, 'index.html', {'error_message': "Det existerar inte en kupong för koden du angett"})
+        #return error message
+
+
 def form_page_view(request):
     return render(request, "index.html")
 
@@ -60,6 +80,9 @@ def register(request):
             coupon_code = form['coupon']
             coupon_valid = False
             coupon_expired = False
+            coupon_used = 0
+            coupon_total_uses = 0
+
             if coupon_code != "":
                 coupon_entered = True
 
@@ -69,6 +92,8 @@ def register(request):
                     if not coupon.is_used():
                         coupon_valid = True
                         final_price = coupon.price
+                        coupon_used = coupon.times_used
+                        coupon_total_uses = coupon.uses
                     else:
                         coupon_valid = False
                         coupon_expired = True
@@ -92,10 +117,11 @@ def register(request):
                 'price': price,
                 'coupon_valid': coupon_valid,
                 'final_price': final_price,
-                'coupon': coupon,
                 'coupon_code': coupon_code,
                 'coupon_entered': coupon_entered,
                 'coupon_expired': coupon_expired,
+                'coupon_used': coupon_used,
+                'coupon_total_uses': coupon_total_uses,
                 }
             return render(request, 'confirm.html', context)
 
@@ -121,13 +147,16 @@ def send(request):
 
         if DiscountCode.objects.filter(code=coupon).exists():
             coupon = DiscountCode.objects.get(code=coupon)
+            new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcohol_free, diet=diet, avec=avec, comment=comment, discount_code=coupon)
             if not coupon.is_used():
                 price = coupon.price #update price if a coupon exists and is not used
                 coupon.times_used += 1
                 coupon.save()
+        else:
+            new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcohol_free, diet=diet, avec=avec, comment=comment)
 
 
-        new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcohol_free, diet=diet, avec=avec, comment=comment, discount_code=coupon)
+        new_participant.uuid = uuid.uuid4()
         new_participant.save()
         subject, sender, recipient = 'Anmälan till Kårspexets föreställning', 'Kårspexambassaden <karspex@teknolog.fi>', email
         content = "Tack för din anmälan till Kårspexets Finlandsföreställning den 10 februari.\nVänligen betala " + str(price) + " € till konto FI45 4055 0012 3320 33 (mottagare Kårspexambassaden) med för- och efternamn som meddelande senast 8.2.2017.\n\nMed vänliga hälsningar,\nKårspexambassaden"

@@ -13,6 +13,7 @@ class Participant(models.Model):
     comment = models.TextField(default="none")
     discount_code = models.ForeignKey('DiscountCode', db_column='participants', null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
+    uuid = models.CharField(max_length=100,default="")
 
     def __str__(self):
         return self.name

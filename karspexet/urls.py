@@ -24,4 +24,6 @@ urlpatterns = [
     #url(r'^submit/$', confirm),
     url(r'^send/$', send),
     url(r'^register/$', register),
+    url(r'^coupon/(?P<coupon_code>\w+)$', coupon),
+    url(r'^ticket/(?P<participant_id>[0-9a-f-]+)$', ticket),
 ]

@@ -4,34 +4,44 @@
 }
 
 #form-background {
-	background-color:rgba(255,255,255,0.8);
+	background-color:rgba(0,0,0,0.6);
 	padding: 15px;
 	border-radius: 5px;
-	position: center;
+	position: top;
+}
+p {
+  color: rgb(245,245,245);
+}
+
+form {
+  color: rgb(245,245,245);
 }
 
 body {
-	background-image: url('../images/bakgrund.jpg');
-	background-size: 100%;
+	background-image: url('../images/bakgrund.png');
+	background-size: 80%;
 	background-position: top;
-	font-family: 'AgencyFb', 'Arial';
+  background-repeat: no-repeat;
+	font-family: 'TRAJANUS', 'Arial';
 	font-size: 2em;
 	font-style: bold;
+
 }
 
 h2 {
 	font-size: 40px;
 	margin-top: 5px;
+  color: white;
 }
-
 @font-face {
-    font-family: 'ParkLaneNF'; 
+    font-family: 'TRAJANUS';
+    src: url('../fonts/TRAJANUS.ttf');
+}
+@font-face {
+    font-family: 'ParkLaneNF';
     src: url('../fonts/ParkLaneNF.ttf');
 }
-@font-face {
-    font-family: 'AgencyFb'; 
-    src: url('../fonts/AgencyFb.ttf');
-}
+
 
 @media (min-width: 1000px) {
     #form-background {
