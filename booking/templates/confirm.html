@@ -46,8 +46,12 @@
             {% endif %}
             <li class="list-group-item">Kommentar: {{comment}} </li>
 
-          <li class="list-group-item"> <strong>Pris: {{final_price}} €</strong>
-
+          <li class="list-group-item"> <strong>Pris: {{price}} €</strong>
+            {% if  cheaper_price_available%}
+            <div class="alert alert-warning">
+              Rabattkoden du har angett ger rätt till ett pris som är dyrare än ditt normala pris och har därför inte använts.
+            </div>
+            {% endif %}
           {% if coupon_entered %}
             {% if coupon_valid %}
             <div class="alert alert-success">
@@ -56,7 +60,7 @@
           </div>
             <div class="alert alert-warning">
               Kupongen du angett har redan använts. Kontakta ambassaden vid oklara situationer.
-            </div>
+            </div>            
             {% else %}
             <div class="alert alert-warning">
             Tyvärr berättigar inte din kupong <i>{{ coupon_code }}</i> till rabatt. Kontrollera att du fyllt i koden korrekt!

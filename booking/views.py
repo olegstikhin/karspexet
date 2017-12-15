@@ -10,19 +10,24 @@ import uuid
 
 from .forms import registerForm
 
-def determine_price(spex, nachspex, guest_type, alcohol_free):
+def determine_price(spex, nachspex, guest_type, alcohol_free, coupon):
     price = 0
+
     if spex:
-        if guest_type == 'student':
-            price += 15
-        if guest_type =='phux':
-            price += 10
+        if coupon != None:
+            price += coupon.price
         else:
-            price += 25
-    if nachspex == True:
+            if guest_type == 'student':
+                price += 15
+            elif guest_type =='phux':
+                price += 10
+            else:
+                price += 25
+
+    if nachspex:
         price += 15
-    if alcohol_free == True:
-        price -= 3
+        if alcohol_free:
+            price -= 3
 
     return price
 
@@ -71,7 +76,7 @@ def register(request):
             form = form.cleaned_data
             if form['student'] == 'student':
                 guest_type = 'student'
-            if form['student'] == 'phux':
+            elif form['student'] == 'phux':
                 guest_type = 'phux'
             else:
                 guest_type = 'other'
@@ -89,9 +94,6 @@ def register(request):
                 spex = True
                 nachspex = True
 
-            price = determine_price(spex, nachspex, guest_type, form['alcoholFree'])
-
-            final_price = price
             coupon_code = form['coupon']
             coupon_valid = False
             coupon_expired = False
@@ -100,23 +102,32 @@ def register(request):
 
             if coupon_code != "":
                 coupon_entered = True
-
                 if DiscountCode.objects.filter(code=coupon_code).exists(): #Check if a code exists
-                    #coupon_valid = True
                     coupon = DiscountCode.objects.get(code=form['coupon'])
                     if not coupon.is_used():
                         coupon_valid = True
-                        final_price = coupon.price
                         coupon_used = coupon.times_used
                         coupon_total_uses = coupon.uses
                     else:
+                        coupon_expired = False
                         coupon_valid = False
-                        coupon_expired = True
-
+                        coupon = None
                 else:
                     coupon_valid = False
+                    coupon = None
             else:
+                coupon = None
                 coupon_entered = False
+
+            cheaper_price_available = False
+            if guest_type == 'phux' and coupon != None:
+                if coupon.price >= 10:
+                    coupon = None
+                    cheaper_price_available = True
+                    coupon_entered = False
+
+            price = determine_price(spex, nachspex, guest_type, form['alcoholFree'], coupon)
+
 
             context = {
                 'name': form['name'],
@@ -131,12 +142,12 @@ def register(request):
                 'nachspex': nachspex,
                 'price': price,
                 'coupon_valid': coupon_valid,
-                'final_price': final_price,
                 'coupon_code': coupon_code,
                 'coupon_entered': coupon_entered,
                 'coupon_expired': coupon_expired,
                 'coupon_used': coupon_used,
                 'coupon_total_uses': coupon_total_uses,
+                'cheaper_price_available': cheaper_price_available,
                 }
             return render(request, 'confirm.html', context)
 
@@ -158,24 +169,47 @@ def send(request):
         diet = request.POST['diet']
         guest_type = request.POST['student']
 
-
-        price = determine_price(spex, nachspex, guest_type, alcohol_free)
-
         if DiscountCode.objects.filter(code=coupon).exists():
-            print("code exists")
             coupon = DiscountCode.objects.get(code=coupon)
-            new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcohol_free, diet=diet, avec=avec, comment=comment, discount_code=coupon, student=guest_type, price=coupon.price)
             if not coupon.is_used():
-                print('coupon is not used')
-                price = coupon.price #update price if a coupon exists and is not used
                 coupon.times_used += 1
                 coupon.save()
+            else:
+                coupon = None
         else:
-            new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcohol_free, diet=diet, avec=avec, comment=comment, student=guest_type, price=price)
+            coupon = None
+        '''
+        Apparently the 'True' is not a Boolean and needs to be converted, wtf
+        '''
+        if nachspex == 'True':
+            nachspex = True
+        else:
+            nachspex = False
+
+        if spex == 'True':
+            spex = True
+        else:
+            spex = False
+
+        if alcohol_free == 'True':
+            alcohol_free = True
+        else:
+            alcohol_free = False
+
+
+        if guest_type == 'phux' and coupon != None:
+            if coupon.price >= 10:
+                coupon = None
+
+
+        price = determine_price(spex, nachspex, guest_type, alcohol_free, coupon)
+        print(price)
+
+        new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcohol_free, diet=diet, avec=avec, comment=comment, student=guest_type, price=price)
 
         new_participant.uuid = uuid.uuid4()
         new_participant.save()
-        ticket_url = 'https://karspex.teknologforeningen.fi/ticket/'+str(new_participant.uuid)+'/'
+        ticket_url = 'https://karspex.teknologforeningen.fi/ticket/'+str(new_participant.uuid)
         #ticket_url = '127.0.0.1:8000/ticket/'+str(new_participant.uuid)
 
         print(ticket_url)
