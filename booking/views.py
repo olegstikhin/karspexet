@@ -175,8 +175,8 @@ def send(request):
 
         new_participant.uuid = uuid.uuid4()
         new_participant.save()
-        #ticket_url = 'https://karspex.teknologforeningen.fi/ticket/'+str(new_participant.uuid)+'/'
-        ticket_url = '127.0.0.1:8000/ticket/'+str(new_participant.uuid)
+        ticket_url = 'https://karspex.teknologforeningen.fi/ticket/'+str(new_participant.uuid)+'/'
+        #ticket_url = '127.0.0.1:8000/ticket/'+str(new_participant.uuid)
 
         print(ticket_url)
         subject, sender, recipient = 'Anmälan till Kårspexets föreställning', 'Kårspexambassaden <karspex@teknolog.fi>', email
