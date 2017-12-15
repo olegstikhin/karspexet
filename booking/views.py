@@ -10,16 +10,18 @@ import uuid
 
 from .forms import registerForm
 
-def determine_price(spex, nachspex, student, alcohol_free):
+def determine_price(spex, nachspex, guest_type, alcohol_free):
     price = 0
     if spex:
-        if student:
+        if guest_type == 'student':
             price += 15
+        if guest_type =='phux':
+            price += 10
         else:
             price += 25
-    if nachspex:
+    if nachspex == True:
         price += 15
-    if alcohol_free:
+    if alcohol_free == True:
         price -= 3
 
     return price
@@ -30,9 +32,18 @@ def determine_price(spex, nachspex, student, alcohol_free):
 def ticket(request, participant_id):
     if Participant.objects.filter(uuid = participant_id).exists():
         participant = Participant.objects.get(uuid = participant_id)
-        return HttpResponse("It Works")
+
+        context = {
+        'name': participant.name,
+        'student': participant.student,
+        'spex': participant.spex,
+        'nachspex': participant.nachspex,
+        'price': participant.price,
+        }
+
+        return render(request, 'ticket.html', context)
     else:
-        return HttpResponse("Boo :()")
+        return render(request, 'index.html', {'error_message': "Det existerar inte biljett med denna id"})
 
 def coupon(request, coupon_code):
     if DiscountCode.objects.filter(code = coupon_code).exists():
@@ -43,6 +54,8 @@ def coupon(request, coupon_code):
         return render(request, 'index.html', {'error_message': "Det existerar inte en kupong för koden du angett"})
         #return error message
 
+def thanks(request):
+    return render(request, "thanks.html")
 
 def form_page_view(request):
     return render(request, "index.html")
@@ -57,9 +70,11 @@ def register(request):
 
             form = form.cleaned_data
             if form['student'] == 'student':
-                student = True
+                guest_type = 'student'
+            if form['student'] == 'phux':
+                guest_type = 'phux'
             else:
-                student = False
+                guest_type = 'other'
 
             if form['register_choice'] == 'only_spex':
                 register_choice = "Endast spex"
@@ -74,7 +89,7 @@ def register(request):
                 spex = True
                 nachspex = True
 
-            price = determine_price(spex, nachspex, student, form['alcoholFree'])
+            price = determine_price(spex, nachspex, guest_type, form['alcoholFree'])
 
             final_price = price
             coupon_code = form['coupon']
@@ -112,7 +127,7 @@ def register(request):
                 'alcohol_free' : form['alcoholFree'],
                 'register_choice': register_choice,
                 'spex': spex,
-                'student': student,
+                'student': guest_type,
                 'nachspex': nachspex,
                 'price': price,
                 'coupon_valid': coupon_valid,
@@ -141,27 +156,33 @@ def send(request):
         alcohol_free = request.POST['alcohol_free']
         avec = request.POST['avec']
         diet = request.POST['diet']
-        student = request.POST['student']
+        guest_type = request.POST['student']
 
-        price = determine_price(spex, nachspex, student, alcohol_free)
+
+        price = determine_price(spex, nachspex, guest_type, alcohol_free)
 
         if DiscountCode.objects.filter(code=coupon).exists():
+            print("code exists")
             coupon = DiscountCode.objects.get(code=coupon)
-            new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcohol_free, diet=diet, avec=avec, comment=comment, discount_code=coupon)
+            new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcohol_free, diet=diet, avec=avec, comment=comment, discount_code=coupon, student=guest_type, price=coupon.price)
             if not coupon.is_used():
+                print('coupon is not used')
                 price = coupon.price #update price if a coupon exists and is not used
                 coupon.times_used += 1
                 coupon.save()
         else:
-            new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcohol_free, diet=diet, avec=avec, comment=comment)
-
+            new_participant = Participant(name=name, email=email, spex=spex, nachspex=nachspex, alcoholfree=alcohol_free, diet=diet, avec=avec, comment=comment, student=guest_type, price=price)
 
         new_participant.uuid = uuid.uuid4()
         new_participant.save()
+        #ticket_url = 'https://karspex.teknologforeningen.fi/ticket/'+str(new_participant.uuid)+'/'
+        ticket_url = '127.0.0.1:8000/ticket/'+str(new_participant.uuid)
+
+        print(ticket_url)
         subject, sender, recipient = 'Anmälan till Kårspexets föreställning', 'Kårspexambassaden <karspex@teknolog.fi>', email
-        content = "Tack för din anmälan till Kårspexets Finlandsföreställning den 10 februari.\nVänligen betala " + str(price) + " € till konto FI45 4055 0012 3320 33 (mottagare Kårspexambassaden) med för- och efternamn som meddelande senast 8.2.2017.\n\nMed vänliga hälsningar,\nKårspexambassaden"
+        content = "Tack för din anmälan till Kårspexets Finlandsföreställning den 10 februari. \n Din biljett hittar du på "+ ticket_url +". Vänligen ta fram biljetten när du går in i teatern för att försnabba inträdet. \n Betala " + str(price) + " € till konto FI45 4055 0012 3320 33 (mottagare Kårspexambassaden) med för- och efternamn som meddelande senast 5.2.2018.\n\nMed vänliga hälsningar,\nKårspexambassaden"
         send_mail(subject, content, sender, [email], fail_silently=False)
 
-        return render(request, "thanks.html")
+        return HttpResponseRedirect('/register/thanks/')
     else:
         return render(request, 'index.html', {'error_message': "Det skedde ett fel, vänligen försök pånytt"})

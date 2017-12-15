@@ -4,17 +4,19 @@
 }
 
 #form-background {
-	background-color:rgba(0,0,0,0.6);
+	background-color:rgba(255,255,255,0.7);
 	padding: 15px;
 	border-radius: 5px;
 	position: top;
 }
+
 p {
-  color: rgb(245,245,245);
+  color: rgb(0,0,0);
+  text-shadow: 1px 1px rgb(230,230,230);
 }
 
 form {
-  color: rgb(245,245,245);
+  color: rgb(0,0,0);
 }
 
 body {
@@ -22,25 +24,24 @@ body {
 	background-size: 80%;
 	background-position: top;
   background-repeat: no-repeat;
-	font-family: 'TRAJANUS', 'Arial';
+  font-family: 'Quattrocento', serif;
 	font-size: 2em;
-	font-style: bold;
+
+}
+
+strong {
+  color: rgb(170,0,0);
+  text-shadow: 0px 0px 1px 1px rgb(230,230,230);
 
 }
 
 h2 {
-	font-size: 40px;
+	font-size: 45px;
 	margin-top: 5px;
-  color: white;
+  color: rgb(190,0,0);
 }
-@font-face {
-    font-family: 'TRAJANUS';
-    src: url('../fonts/TRAJANUS.ttf');
-}
-@font-face {
-    font-family: 'ParkLaneNF';
-    src: url('../fonts/ParkLaneNF.ttf');
-}
+
+
 
 
 @media (min-width: 1000px) {

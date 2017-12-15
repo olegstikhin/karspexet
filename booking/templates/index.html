@@ -1,44 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-    <script>
-        $(document).ready(function() {
-            $("#spex").change(function() {
-                if($("#spex").is(':checked')) {
-                    $("#student1").prop("disabled", false);
-                    $("#student2").prop("disabled", false);
-                    $("#discount_code").prop("disabled", false);
-                } else {
-                    $("#student1").prop("disabled", true);
-                    $("#student2").prop("disabled", true);
-                    $("#discount_code").prop("disabled", true);
-                }
-            });
-            $("#nachspex").change(function() {
-                if($("#nachspex").is(':checked')) {
-                    $("#alcoholfree").prop("disabled", false);
-                    $("#avec").prop("disabled", false);
-                    $("#diet").prop("disabled", false);
-                } else {
-                    $("#alcoholfree").prop("disabled", true);
-                    $("#avec").prop("disabled", true);
-                    $("#diet").prop("disabled", true);
-                }
-            });
-        });
-    </script>
-
 	<div class="clearfix">
-		<h2 class="pull-left">Kårspexets Finlandsturné</h2>
-        <div class="pull-right logo">
-            <img src='static/images/logo.png' alt="Kårspexet" width="100%" />
+		<h2 class="text-center">Kårspexets Finlandsturné 2018</h2>
+        <div class="logo center-block">
+            <!--img src='static/images/logo.png' alt="Kårspexet" width="100%" /> -->
         </div>
 	</div>
 
+    <p>Välkommen på Kårspexet 17/18 <strong>"Vlad spetsaren - eller Blod Spett och Pålar"</strong> den 10:e februari klockan 15 i Gloria (Lilla Robertsgatan 12, Helsingfors).</p>
 
-    <p>Välkommen på Kårspexet 2017 "Karl XII - eller Knappast Karl För Sin Krona" den 25 februari klockan 15 i Helsingin Suomalainen Yhteiskoulu (Stormyrvägen 8, Helsingfors). Efteråt följer nachspex på Teknologföreningen (Otsvängen 22, Esbo) för de som vill fortsätta kvällen med en sits i gott sällskap. Priset för föreställningen är 15/25&nbsp;€ (studerande/övriga) och för nachspexet 15&nbsp;€ (13&nbsp;€ alkoholfri). För både föreställningen och nachspexet blir priset 30/40&nbsp;€ (studerande/övriga) eller 27/37&nbsp;€ (alkoholfri).</p>
+    <p>Efter föreställningen finns det möjlighet att fortsätta kvällen i gott sällskap och delta på Nachspex på Teknologföreningen (Otsvängen 22, Esbo).</p>
+
+    <p>Priset för föreställningen är 10/15/25&nbsp;€ (phux/studerande/övriga) och för Nachspexet 15&nbsp;€ (13&nbsp;€ alkoholfri). För både föreställningen och Nachspexet är priset 25/30/40&nbsp;€ (phux/studerande/övriga) eller 22/27/37&nbsp;€ (alkoholfri).</p>
     <p>Ifall ni har en rabattkod, kan ni mata in den i fältet "Rabattkod". Efter att ni klickat på fortsätt beräknar bokningssystemet ert nya pris.</p>
-    <p>Vi ses på spexet, kom ihåg skumpan!</p>
+    <p>Vi ses på spexet!</p>
 
-    <a href="/register/" class="btn btn-default text-center">Anmälan till spexet</a>
+    <a href="/register/" class="btn btn-lg btn-success btn-block">Köp biljetter!</a>
 
 {% endblock content %}

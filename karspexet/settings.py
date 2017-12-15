@@ -25,7 +25,7 @@ SECRET_KEY = 'temporary'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -124,5 +124,6 @@ STATICFILES_DIRS = (
 )
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '~/petul/karspexet/static/'
 
 EMAIL_HOST = 'smtp.ayy.fi'

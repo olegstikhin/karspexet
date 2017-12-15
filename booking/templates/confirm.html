@@ -10,24 +10,17 @@
             <li class="list-group-item">Namn: {{ name }}</li>
             <li class="list-group-item">E-postaddress: {{email}} </li>
             <li class="list-group-item">Biljettyp: {{register_choice}} </li>
-            <li class="list-group-item">Kommentar: {{comment}} </li>
             <li class="list-group-item">Prisklass:
-            {% if student %}
-             Studerande
+             {% if student == "student" %}
+              Studerande
+             {% elif student == "phux" %}
+              Phux
              {% else %}
-             Inte Studerande
+              Inte Studerande
              {% endif %}
            </li>
-            <li class="list-group-item">Spex:
-            {% if spex %}
-               Ja
-            {% else %}
-               Nej
-            {% endif %}
-          </li>
-          <li class="list-group-item"> Nachspex:
+
             {% if nachspex %}
-               Ja
                <li class="list-group-item"> Specialdiet:
                  {% if diet != "" %}
                   {{diet}}
@@ -50,10 +43,9 @@
                       Ingen avec
                     {% endif %}
                   </li>
-            {% else %}
-               Nej
             {% endif %}
-          </li>
+            <li class="list-group-item">Kommentar: {{comment}} </li>
+
           <li class="list-group-item"> <strong>Pris: {{final_price}} €</strong>
 
           {% if coupon_entered %}
@@ -87,6 +79,6 @@
         <input type="hidden" name="alcohol_free" value="{{ alcohol_free }}">
         <input type="hidden" name="comment" value="{{ comment }}">
 
-        <button type="submit" class="btn btn-primary btn-lg center-block">Boka biljett</button>
+        <button type="submit" class="btn btn-success btn-lg btn-block">Boka biljett</button>
     </form>
 {% endblock content %}

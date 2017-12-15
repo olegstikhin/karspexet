@@ -14,6 +14,8 @@ class Participant(models.Model):
     discount_code = models.ForeignKey('DiscountCode', db_column='participants', null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     uuid = models.CharField(max_length=100,default="")
+    student = models.CharField(max_length=100,default="")
+    price = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name

@@ -8,7 +8,9 @@ REGISTERING_OPTIONS = (
 
 STUDENT = (
     ('student', 'Studerande'),
+    ('phux', 'Phux'),
     ('not_student', 'Inte studerande'),
+
 )
 
 class registerForm(forms.Form):
@@ -22,7 +24,7 @@ class registerForm(forms.Form):
     student = forms.ChoiceField(
         widget = forms.Select,
         choices = STUDENT,
-        label = "Studerande",
+        label = "Biljettyp",
         required = False,
     )
     alcoholFree = forms.BooleanField(label ="Alkoholfritt Nachspex", required = False)

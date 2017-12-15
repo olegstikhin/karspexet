@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+<div class="containter">
+  <div class="row">
+    <p class="text-center">Din kupong har använts {{times_used}}/{{uses}} gånger</p>
+  </div>
+  <div class="row">
+    <p class="text-center">Denna kupong berättigar till en biljett för {{price}}€</p>
+  </div>
+
+</div>
+{% endblock content %}
