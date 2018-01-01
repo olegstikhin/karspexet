@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="sv">
   <head>
+    <link href="https://fonts.googleapis.com/css?family=Quattrocento" rel="stylesheet">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,41 +24,35 @@
   </head>
 
   <body>
-
-    <!-- <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#"><img src="{% static 'images/logo.png' %}" width="110px" /></a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse"> -->
-          <!--<ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>-->
-        <!-- </div> --><!--/.nav-collapse -->
-      <!-- </div>
-    </nav> -->
+    {% if error_message %}
+    <div class="alert alert-danger text-center">
+      <strong>Varning!</strong> {{error_message}}
+    </div>
+    {% endif %}
 
     <div class="container">
       <div class="content">
         <div class="center-block" id="form-background">
-        {% block content %}{% endblock content %}
+        {% block content %}
+
+        {% endblock content %}
         </div>
           <div class="footer-logo">
-            <a href="https://www.teknologforeningen.fi/"><img src="{% static 'images/tf_logo.png' %}" height="75px" alt="Teknologföreningen"/></a>
+
             <a href="https://www.tfif.fi/"><img src="{% static 'images/tfif_logo.png' %}" height="75px" alt="Tekniska Föreningen i Finland"/></a>
-            <a href="http://futurice.com"><img src="{% static 'images/futurice_logo.png' %}" height="35px" alt="Futurice"/></a>
-			<a href="http://www.swedenabroad.com/sv-SE/Ambassader/Helsingfors/"><img src="{% static 'images/sv_logo.png' %}" height="75px" alt="Sveriges ambassad i Helsingfors"/></a>
+
+            <!-- <a href="http://futurice.com"><img src="{% static 'images/futurice_logo.png' %}" height="35px" alt="Futurice"/></a> -->
+			      <!-- <a href="http://www.swedenabroad.com/sv-SE/Ambassader/Helsingfors/"><img src="{% static 'images/sv_logo.png' %}" height="75px" alt="Sveriges ambassad i Helsingfors"/></a> -->
+            <a href="https://karspexet.se"><img src="https://karspexet.se/static/svg/luva-inkscape.svg" height="60px" alt="Kårspexet"/></a>
+
+            <a href="https://www.teknologforeningen.fi/"><img src="{% static 'images/tf_logo.png' %}" height="75px" alt="Teknologföreningen"/></a>
+
+
           </div>
       </div>
-    </div><!-- /.container -->
+    </div>
+
+    <!-- /.container -->
 
 
     <!-- Bootstrap core JavaScript

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+	<div class="clearfix">
+		<h2 class="text-center">Biljett till Kårspexets Finlandsturné</h2>
+        <div class="logo center-block">
+            <!--img src='static/images/logo.png' alt="Kårspexet" width="100%" /> -->
+        </div>
+	</div>
+			<h1>{{ name }}</h1>
+			<h3> Spex:
+				{% if spex %}
+				Ja
+				{% else %}
+				Nej
+				{%endif%}
+			</h3>
+			<h3> Nachspex:
+				{% if nachspex %}
+				Ja
+				{% else %}
+				Nej
+				{%endif%}
+			</h3>
+			<h3>Biljettyp: {{register_choice}}
+			 {% if student == "student" %}
+				Studerande
+			 {% elif student == "phux" %}
+				Phux
+			 {% else %}
+				Inte Studerande
+			 {% endif %}
+		 </h3>
+		 <h3>Pris: {{price}} € </h3>
+
+
+
+    <p>Välkommen på Kårspexet 17/18 <strong>"Vlad spetsaren - eller Blod Spett och Pålar"</strong> den 10:e februari i Gloria (Lilla Robertsgatan 12, Helsingfors)</p>
+
+		<p>Föreställningen börjar klockan 15:00, så kom på plats i god tid. </p>
+
+
+
+{% endblock content %}
